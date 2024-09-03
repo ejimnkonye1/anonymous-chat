@@ -6,6 +6,7 @@ export const Chatbox = () => {
     const [message, setmessage] = useState('')
     const [messages, setMessages] = useState([])
    const user = useSelector((state) => state.username)
+   console.log('this', user)
 const handleSendMessage =async (e) => {
     e.preventDefault()
     if(message.trim() == ''){
@@ -75,28 +76,29 @@ handleFecthmessage()
             {user ?<p>logged in as {user.username}</p>: <p>User</p>}
           </div>
       
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="mb-4">
+          <div className="flex-1 overflow-y-auto p-6 billie">
+            {/* <div className="mb-4">
               <div className="bg-gray-200 p-4 rounded-lg">
                 <p className="text-gray-600">Received message</p>
               </div>
               <span className="text-gray-500 text-xs">10:00 AM</span>
-            </div>
+            </div> */}
       
             <div className="mb-4">
-              <div className="bg-blue-200 p-4 rounded-lg">
-                <p className="text-gray-600">Sent message</p>
+             
+              
                 {messages.length > 0 ? (
                 messages.filter((msg,index, self)=>
                 index === self.findIndex((m) => m.messages === msg.messages && m.senderId === msg.senderId)
                 )
                 
                 .map((msg, index) => {
-                  const isCurrentUser = msg.senderId === user.username;
+                  const isCurrentUser = msg.senderId === user.user_id;
+                  console.log(isCurrentUser)
               return(
-                <ul key={index}>
-                <li className={`${isCurrentUser ? 'sent text-red-400': 'text-blue-400'} ` }>
-                {msg.messages}
+                <ul key={index} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-4`}>
+                <li className={`${isCurrentUser ? 'flex-end sent bg-blue-200 p-4 rounded-lg text-gray-600 mb-4': 'bg-gray-200 p-4 rounded-lg text-gray-600 mb-4'} ` }>
+                 {msg.messages}
                 </li>
               </ul>
               );
@@ -109,7 +111,9 @@ handleFecthmessage()
 
               </div>
               <span className="text-gray-500 text-xs">10:05 AM</span>
-            </div>
+           
+
+
           </div>
       
           <form className="bg-gray-200 py-4 px-6 flex justify-between items-center" onSubmit={handleSendMessage}>

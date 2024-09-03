@@ -67,7 +67,7 @@ def Login():
    if check_password_hash(user['password'], password):
       session['user_id'] = str(user['_id']) 
       session['username'] = user['username']
-      return jsonify({'message':'user exists logging in now', 'username': user['username']}),200
+      return jsonify({'message':'user exists logging in now', 'username': user['username'], 'user_id': str(user['_id'])}),200
    else:
       return jsonify({'error': 'invalid password'}),401
    
