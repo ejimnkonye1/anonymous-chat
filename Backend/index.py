@@ -1,14 +1,19 @@
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
+import secrets
+import datetime
+
 uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 app = Flask(__name__)
 CORS(app)
+secret_key = secrets.token_urlsafe(16)
+app.secret_key = secret_key
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -59,7 +64,9 @@ def Login():
       return jsonify({'error': 'user not found'}), 404
    #check the password the user entered is same with the hashed password
    if check_password_hash(user['password'], password):
-      return jsonify({'message':'user exists logging in now'}),200
+      session['user_id'] = str(user['_id']) 
+      session['username'] = user['username']
+      return jsonify({'message':'user exists logging in now', 'username': user['username']}),200
    else:
       return jsonify({'error': 'invalid password'}),401
    
