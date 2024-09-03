@@ -109,7 +109,7 @@ def fetchmessage():
       message['_id'] = str(message['_id'])
       message['senderId'] = str(message['senderId'])
       message['receiverId'] = str(message['receiverId'])
-
+   
    return jsonify({"message":messages}),200
 if __name__ == '__main__':
    app.run(debug=True, port=5000)

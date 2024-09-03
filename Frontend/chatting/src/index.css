@@ -2,3 +2,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.billie{
+    overflow-y: auto;
+    height: 300px;
+}
+.sent{
+    color: red !important;
+}

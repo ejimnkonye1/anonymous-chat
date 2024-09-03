@@ -42,7 +42,7 @@ const handleFecthmessage = async (e) => {
   
   if (user){
     try {
-      const response = await fetch(`http://localhost:5000/fetchmessages?senderId=billie`,{
+      const response = await fetch(`http://localhost:5000/fetchmessages?senderId=${user.username}`,{
         method:'GET',
         headers:{
           'Content-type': 'application/json'
@@ -75,7 +75,7 @@ handleFecthmessage()
             {user ?<p>logged in as {user.username}</p>: <p>User</p>}
           </div>
       
-          <div className="flex-1 overflow-y-auto p-6 billie">
+          <div className="flex-1 overflow-y-auto p-6">
             <div className="mb-4">
               <div className="bg-gray-200 p-4 rounded-lg">
                 <p className="text-gray-600">Received message</p>
@@ -87,10 +87,15 @@ handleFecthmessage()
               <div className="bg-blue-200 p-4 rounded-lg">
                 <p className="text-gray-600">Sent message</p>
                 {messages.length > 0 ? (
-                messages.map((msg, index) => {
+                messages.filter((msg,index, self)=>
+                index === self.findIndex((m) => m.messages === msg.messages && m.senderId === msg.senderId)
+                )
+                
+                .map((msg, index) => {
+                  const isCurrentUser = msg.senderId === user.username;
               return(
                 <ul key={index}>
-                <li >
+                <li className={`${isCurrentUser ? 'sent text-red-400': 'text-blue-400'} ` }>
                 {msg.messages}
                 </li>
               </ul>
