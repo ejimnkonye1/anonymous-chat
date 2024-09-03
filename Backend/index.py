@@ -12,6 +12,7 @@ uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.
 client = MongoClient(uri, server_api=ServerApi('1'))
 app = Flask(__name__)
 CORS(app)
+
 secret_key = secrets.token_urlsafe(16)
 app.secret_key = secret_key
 # Send a ping to confirm a successful connection
@@ -81,7 +82,7 @@ def sendmessage():
 
    if not sender_user :
       return jsonify({"error": 'invalid sender ' }), 400
-   receiver_user = user_collection.find({'username':{'$ne': sender_username} })
+   receiver_user = list(user_collection.find({'username':{'$ne': sender_username} }))
    if not receiver_user :
       return jsonify({'error':'others users not found'}),400
    for receiver in receiver_user:
@@ -91,7 +92,24 @@ def sendmessage():
        "messages": messages,
       
     })
-   return jsonify({'message successfully sent'}),201
+   return jsonify({'message':'message successfully sent'}),201
+@app.route('/fetchmessages', methods=['GET'])
+def fetchmessage():
+  #use args to query parameters in GET 
+   senderId = request.args.get('senderId')
+
+
+   sender_user = user_collection.find_one({'username':senderId})
+   if not sender_user :
+      return jsonify ({"error":'invalid user'}), 400
+   messages = list(  messages_collection.find({ }))
+   if not messages:
+      return jsonify({'error':'Message not found'}),404
+   for message in messages:
+      message['_id'] = str(message['_id'])
+      message['senderId'] = str(message['senderId'])
+      message['receiverId'] = str(message['receiverId'])
+
+   return jsonify({"message":messages}),200
 if __name__ == '__main__':
    app.run(debug=True, port=5000)
-  
