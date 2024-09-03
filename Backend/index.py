@@ -70,7 +70,7 @@ def Login():
    else:
       return jsonify({'error': 'invalid password'}),401
    
-@app.route('/sendmessage', methods=["GET"])
+@app.route('/sendmessage', methods=["POST"])
 def sendmessage():
    data = request.get_json()
    sender_username = data.get('sender_username')
@@ -81,15 +81,15 @@ def sendmessage():
 
    if not sender_user :
       return jsonify({"error": 'invalid sender ' }), 400
-   receiver_user = user_collection.find_one({'username':{'$ne': sender_username} })
-   if not receiver_user:
-      return jsonify({'error':'others users not found'})
+   receiver_user = user_collection.find({'username':{'$ne': sender_username} })
+   if not receiver_user :
+      return jsonify({'error':'others users not found'}),400
    for receiver in receiver_user:
       messages_collection.insert_one({
        'senderId': sender_user['_id'],
-       'receiverId': receiver[['_id']],
+       'receiverId': receiver['_id'],
        "messages": messages,
-       'timestamp': datetime.utcnow()
+      
     })
    return jsonify({'message successfully sent'}),201
 if __name__ == '__main__':

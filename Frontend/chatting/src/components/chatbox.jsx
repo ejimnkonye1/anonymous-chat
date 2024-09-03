@@ -11,7 +11,8 @@ const handleSendMessage =async (e) => {
     if(message.trim() == ''){
         return
     }
-    try{
+    if (user){
+      try{
         const response = await fetch('http://localhost:5000/sendmessage',{
             method:'POST',
             headers:{
@@ -19,12 +20,14 @@ const handleSendMessage =async (e) => {
             },
             body: JSON.stringify({
                 message: message,
-                senderId: ''
-            })
+                senderId: user.username,
+                sender_username: user.username
+            }),
         })
       const data = await response.json()
       if(response.ok){
         console.log('sent', data)
+        setmessage('')
       }else{
         console.log('failed', data)
       }
@@ -32,6 +35,7 @@ const handleSendMessage =async (e) => {
        console.log(err)
     }
 
+    }
 
 }
     return(
@@ -39,7 +43,7 @@ const handleSendMessage =async (e) => {
         <div className="max-w-lg w-full p-4 rounded-lg shadow-lg bg-white">
           <div className="bg-gray-200 py-4 px-6 flex justify-between items-center">
             <h2 className="text-lg font-bold">Chat</h2>
-            {user && <p>logged in as {user.username}</p>}
+            {user ?<p>logged in as {user.username}</p>: <p>User</p>}
           </div>
       
           <div className="flex-1 overflow-y-auto p-6">
@@ -58,13 +62,13 @@ const handleSendMessage =async (e) => {
             </div>
           </div>
       
-          <div className="bg-gray-200 py-4 px-6 flex justify-between items-center">
+          <form className="bg-gray-200 py-4 px-6 flex justify-between items-center" onSubmit={handleSendMessage}>
             <input type="text" className="w-full py-2 px-4 rounded-lg"
             onChange={(e) => setmessage(e.target.value)}
-            onClick={handleSendMessage}
+            value={message}
             placeholder="Type a message..." />
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Send</button>
-          </div>
+            <button type="submit"   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Send</button>
+          </form>
         </div>
       </div>
     )
