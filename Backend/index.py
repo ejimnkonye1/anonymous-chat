@@ -82,14 +82,17 @@ def sendmessage():
 
    if not sender_user :
       return jsonify({"error": 'invalid sender ' }), 400
+   # find all user expect sender
    receiver_user = list(user_collection.find({'username':{'$ne': sender_username} }))
    if not receiver_user :
       return jsonify({'error':'others users not found'}),400
+   #send mes to all users
    for receiver in receiver_user:
       messages_collection.insert_one({
        'senderId': sender_user['_id'],
        'receiverId': receiver['_id'],
        "messages": messages,
+        "timestamp":datetime.datetime.now(datetime.timezone.utc)
       
     })
    return jsonify({'message':'message successfully sent'}),201
@@ -97,11 +100,10 @@ def sendmessage():
 def fetchmessage():
   #use args to query parameters in GET 
    senderId = request.args.get('senderId')
-
-
    sender_user = user_collection.find_one({'username':senderId})
    if not sender_user :
       return jsonify ({"error":'invalid user'}), 400
+   #find all mes in collection
    messages = list(  messages_collection.find({ }))
    if not messages:
       return jsonify({'error':'Message not found'}),404
@@ -109,7 +111,7 @@ def fetchmessage():
       message['_id'] = str(message['_id'])
       message['senderId'] = str(message['senderId'])
       message['receiverId'] = str(message['receiverId'])
-   
+      # message['timestamp'] = str(message['timestamp'])
    return jsonify({"message":messages}),200
 if __name__ == '__main__':
    app.run(debug=True, port=5000)

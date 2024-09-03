@@ -68,6 +68,12 @@ const handleFecthmessage = async (e) => {
 useEffect(()=> {
 handleFecthmessage()
 },[user])
+const formatTime = (timestamp) => {
+  // Create a Date object from the timestamp string
+  const time = new Date(timestamp); // Assuming timestamp is in string format
+  return time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+};
+
     return(
         <div className="flex justify-center h-screen overflow-y-hidden min-h-screen">
         <div className="max-w-lg w-full p-4 rounded-lg shadow-lg bg-white">
@@ -95,10 +101,12 @@ handleFecthmessage()
                 .map((msg, index) => {
                   const isCurrentUser = msg.senderId === user.user_id;
                   console.log(isCurrentUser)
+                  
               return(
                 <ul key={index} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-4`}>
                 <li className={`${isCurrentUser ? 'flex-end sent bg-blue-200 p-4 rounded-lg text-gray-600 mb-4': 'bg-gray-200 p-4 rounded-lg text-gray-600 mb-4'} ` }>
-                 {msg.messages}
+                 {msg.messages}<br/>
+                 <span className="text-gray-500 text-xs">{formatTime(msg.timestamp)}</span>
                 </li>
               </ul>
               );
@@ -110,8 +118,6 @@ handleFecthmessage()
 
 
               </div>
-              <span className="text-gray-500 text-xs">10:05 AM</span>
-           
 
 
           </div>
