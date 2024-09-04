@@ -75,61 +75,83 @@ const formatTime = (timestamp) => {
 };
 
     return(
-        <div className="flex justify-center h-screen overflow-y-hidden min-h-screen">
-        <div className="max-w-lg w-full p-4 rounded-lg shadow-lg bg-white">
-          <div className="bg-gray-200 py-4 px-6 flex justify-between items-center">
-            <h2 className="text-lg font-bold">Chat</h2>
-            {user ?<p>logged in as {user.username}</p>: <p>User</p>}
-          </div>
+      //   <div className="flex justify-center h-screen overflow-y-hidden min-h-screen p-4">
+      //   <div className="max-w-lg w-full p-4 rounded-lg shadow-lg bg-white h-full">
+      //     <div className="bg-gray-200 py-4 px-6 flex justify-between items-center">
+      //       <h2 className="text-lg font-bold">Chat</h2>
+      //       {user ?<p>logged in as {user.username}</p>: <p>User</p>}
+      //     </div>
       
-          <div className="flex-1 overflow-y-auto p-6 billie">
-            {/* <div className="mb-4">
-              <div className="bg-gray-200 p-4 rounded-lg">
-                <p className="text-gray-600">Received message</p>
-              </div>
-              <span className="text-gray-500 text-xs">10:00 AM</span>
-            </div> */}
+      //     <div className="flex-1 overflow-y-auto p-6 billie">
+      //       {/* <div className="mb-4">
+      //         <div className="bg-gray-200 p-4 rounded-lg">
+      //           <p className="text-gray-600">Received message</p>
+      //         </div>
+      //         <span className="text-gray-500 text-xs">10:00 AM</span>
+      //       </div> */}
       
-            <div className="mb-4">
+      //       <div className="mb-4">
              
               
-                {messages.length > 0 ? (
-                messages.filter((msg,index, self)=>
-                index === self.findIndex((m) => m.messages === msg.messages && m.senderId === msg.senderId)
-                )
+      //           {messages.length > 0 ? (
+      //           messages.filter((msg,index, self)=>
+      //           index === self.findIndex((m) => m.messages === msg.messages && m.senderId === msg.senderId)
+      //           )
                 
-                .map((msg, index) => {
-                  const isCurrentUser = msg.senderId === user.user_id;
-                  console.log(isCurrentUser)
+      //           .map((msg, index) => {
+      //             const isCurrentUser = msg.senderId === user.user_id;
+      //             console.log(isCurrentUser)
                   
-              return(
-                <ul key={index} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-4`}>
-                <li className={`${isCurrentUser ? 'flex-end sent bg-blue-200 p-4 rounded-lg text-gray-600 mb-4': 'bg-gray-200 p-4 rounded-lg text-gray-600 mb-4'} ` }>
-                 {msg.messages}<br/>
-                 <span className="text-gray-500 text-xs">{formatTime(msg.timestamp)}</span>
-                </li>
-              </ul>
-              );
-                })
-              ) : (
-                <p>no message</p>
+      //         return(
+      //           <ul key={index} className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-4`}>
+      //           <li className={`${isCurrentUser ? 'flex-end sent bg-blue-200 p-4 rounded-lg text-gray-600 mb-4': 'bg-gray-200 p-4 rounded-lg text-gray-600 mb-4'} ` }>
+      //            {msg.messages}<br/>
+      //            <span className="text-gray-500 text-xs">{formatTime(msg.timestamp)}</span>
+      //           </li>
+      //         </ul>
+      //         );
+      //           })
+      //         ) : (
+      //           <p>no message</p>
               
-               )}
+      //          )}
 
 
-              </div>
+      //         </div>
 
 
-          </div>
+      //     </div>
       
-          <form className="bg-gray-200 py-4 px-6 flex justify-between items-center" onSubmit={handleSendMessage}>
-            <input type="text" className="w-full py-2 px-4 rounded-lg"
-            onChange={(e) => setmessage(e.target.value)}
-            value={message}
-            placeholder="Type a message..." />
-            <button type="submit"   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Send</button>
-          </form>
+      //     <form className="bg-gray-200 py-4 px-6 flex justify-between items-center" onSubmit={handleSendMessage}>
+      //       <input type="text" className="w-full py-2 px-4 rounded-lg"
+      //       onChange={(e) => setmessage(e.target.value)}
+      //       value={message}
+      //       placeholder="Type a message..." />
+      //       <button type="submit"   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Send</button>
+      //     </form>
+      //   </div>
+      // </div>
+      <div className="flex justify-center h-screen overflow-y-hidden min-h-screen p-4">
+      <div className="max-w-lg w-full p-4 rounded-lg shadow-lg bg-white h-full flex flex-col">
+        <div className="border-b py-4 px-6 flex justify-between items-center">
+          <h2 className="text-lg font-bold">Chat</h2>
+          {user ? <p>logged in as {user.username}</p> : <p>User</p>}
         </div>
+    
+        <div className="flex-1 overflow-y-auto p-6 billie">
+          {/* your message list code here */}
+        </div>
+    
+        <div className="py-4 px-2">
+  <form onSubmit={handleSendMessage} className="flex justify-between items-center">
+    <input type="text" className="w-full py-2 px-4 rounded-lg bg-grey-200 border border-gray-400 focus:outline-none focus:ring focus:border-blue-500"
+      onChange={(e) => setmessage(e.target.value)}
+      value={message}
+      placeholder="Type a message..." />
+    <button type="submit" className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Send</button>
+  </form>
+</div>
       </div>
+    </div>
     )
 }
