@@ -9,7 +9,7 @@ function App() {
 
 
   return (
-   <div className='w-full min-h-screen bg-blue-700 '>
+   <div className=' min-h-screen bg-blue-700 '>
     <Router>
       <Routes>
         <Route path='/' element={<Loginpage />} />
