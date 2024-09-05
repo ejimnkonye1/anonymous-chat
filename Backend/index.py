@@ -48,8 +48,10 @@ def register():
       'username': username,
        'password': hased_password
    })
- 
-   return jsonify({'message':'user succesfully registered'}),201
+   user = user_collection.find_one({'username':username})
+   session['user_id'] = str(user['_id'])
+   session['username'] = user['username'] 
+   return jsonify({'message':'user succesfully registered', 'username':user['username'], 'user_id':str(user['_id'])}),201
 @app.route('/login', methods=['POST'])
 def Login():
    data = request.get_json()
@@ -100,6 +102,7 @@ def sendmessage():
 def fetchmessage():
   #use args to query parameters in GET 
    senderId = request.args.get('senderId')
+   sender_username = request.args.get('sender_username')
    sender_user = user_collection.find_one({'username':senderId})
    if not sender_user :
       return jsonify ({"error":'invalid user'}), 400
@@ -111,7 +114,10 @@ def fetchmessage():
       message['_id'] = str(message['_id'])
       message['senderId'] = str(message['senderId'])
       message['receiverId'] = str(message['receiverId'])
-      # message['timestamp'] = str(message['timestamp'])
-   return jsonify({"message":messages}),200
+      if 'timestamp' in message:
+       message['timestamp'] = message['timestamp'].isoformat() 
+      else:
+       message['timestamp'] = 'none'
+   return jsonify({"message":messages}),201
 if __name__ == '__main__':
    app.run(debug=True, port=5000)

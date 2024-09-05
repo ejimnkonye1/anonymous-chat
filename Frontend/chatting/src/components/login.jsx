@@ -35,7 +35,7 @@ export const Loginpage = () => {
       }else{
         console.log('user not found logging failed', data)
         setloading(false); 
-        setError(data)
+        setError(data.error)
         setTimeout(() => {
        setError(false)
         }, 4000);

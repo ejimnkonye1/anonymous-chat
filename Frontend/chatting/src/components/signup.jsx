@@ -32,7 +32,7 @@ export const Registerpage = () => {
       }else{
         console.log('user registeration failed', data)
         setloading(false); 
-        setError(data)
+        setError(data.error)
         setTimeout(() => {
        setError(false)
         }, 4000);
