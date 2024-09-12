@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import secrets
 import datetime
+from flask_socketio import SocketIO,emit
 
 uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
@@ -15,6 +16,8 @@ CORS(app)
 
 secret_key = secrets.token_urlsafe(16)
 app.secret_key = secret_key
+socketio = SocketIO(app, cors_allowed_origins="*")
+
 # Send a ping to confirm a successful connection
 try:
     client.admin.command('ping')
@@ -73,9 +76,10 @@ def Login():
    else:
       return jsonify({'error': 'invalid password'}),401
    
-@app.route('/sendmessage', methods=["POST"])
-def sendmessage():
-   data = request.get_json()
+# @app.route('/sendmessage', methods=["POST"])
+@socketio.on('message')
+def sendmessage(data):
+   print('recieved message', data)
    sender_username = data.get('sender_username')
    messages = data.get('message')
 
@@ -83,11 +87,11 @@ def sendmessage():
    sender_user = user_collection.find_one({"username":sender_username})   
 
    if not sender_user :
-      return jsonify({"error": 'invalid sender ' }), 400
+      emit({"error": 'invalid sender ' }), 400
    # find all user expect sender
    receiver_user = list(user_collection.find({'username':{'$ne': sender_username} }))
    if not receiver_user :
-      return jsonify({'error':'others users not found'}),400
+      emit({'error':'others users not found'}),400
    #send mes to all users
    for receiver in receiver_user:
       messages_collection.insert_one({
@@ -97,27 +101,48 @@ def sendmessage():
         "timestamp":datetime.datetime.now(datetime.timezone.utc)
       
     })
-   return jsonify({'message':'message successfully sent'}),201
-@app.route('/fetchmessages', methods=['GET'])
-def fetchmessage():
-  #use args to query parameters in GET 
-   senderId = request.args.get('senderId')
-   sender_username = request.args.get('sender_username')
-   sender_user = user_collection.find_one({'username':senderId})
-   if not sender_user :
-      return jsonify ({"error":'invalid user'}), 400
-   #find all mes in collection
-   messages = list(  messages_collection.find({ }))
-   if not messages:
-      return jsonify({'error':'Message not found'}),404
-   for message in messages:
-      message['_id'] = str(message['_id'])
-      message['senderId'] = str(message['senderId'])
-      message['receiverId'] = str(message['receiverId'])
-      if 'timestamp' in message:
-       message['timestamp'] = message['timestamp'].isoformat() 
-      else:
-       message['timestamp'] = 'none'
-   return jsonify({"message":messages}),201
+       # Emit the message using Socket.IO
+   emit('message', {
+    'sender_username': sender_username,
+    'message': messages,
+    'timestamp': datetime.datetime.now(datetime.timezone.utc).isoformat()
+}, to='/')
+
+   
+   emit({'message':'message successfully sent'}),201
+@socketio.on('fetchmessages')
+def fetchmessage(data):
+    senderId = data.get('senderId')
+    sender_user = user_collection.find_one({'username': senderId})
+    if not sender_user:
+        emit({"error": 'invalid user'}, room=request.sid)
+        return
+
+    # Find all messages in the collection
+    messages = list(messages_collection.find({}))
+    if not messages:
+        emit({'error': 'Messages not found'}, room=request.sid)
+        return
+
+    for message in messages:
+        message['_id'] = str(message['_id'])
+        message['senderId'] = str(message['senderId'])
+        message['receiverId'] = str(message['receiverId'])
+        if 'timestamp' in message:
+            message['timestamp'] = message['timestamp'].isoformat()
+        else:
+            message['timestamp'] = 'none'
+
+    # Emit fetched messages to the specific client
+    emit("fetchMessagesResponse", {"message": messages}, room=request.sid)
+
+@socketio.on('connect')
+def handle_connect():
+    print('A user connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('A user disconnected')
+
 if __name__ == '__main__':
-   app.run(debug=True, port=5000)
+    socketio.run(app, debug=True, port=5000)

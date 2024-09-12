@@ -17,7 +17,6 @@ switch (action.type) {
 }
 const store = configureStore({
     reducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
-    //This should allow you to dispatch functions that return promises
+
 })
 export default store;
