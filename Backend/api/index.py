@@ -28,6 +28,9 @@ except Exception as e:
 db = client['database1']
 user_collection = db['users']
 messages_collection = db['messages']
+@app.route('/')
+def index():
+   return 'py is running'
 @app.route('/register', methods=['POST'])
 def register():
    # make the data a json
