@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 export const Test = () => {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const socket = socketIOClient('http://localhost:5000', {
+  const socket = socketIOClient('https://chat-api-kbqm.onrender.com', {
     transports: ['websocket', 'polling']
   });
   const user = useSelector((state) => state.username); // Adjust according to your Redux state

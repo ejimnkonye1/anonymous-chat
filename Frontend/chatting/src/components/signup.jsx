@@ -13,7 +13,7 @@ export const Registerpage = () => {
     e.preventDefault();
     setloading(true)
     try{
-  const response =    await fetch('http://localhost:5000/register',{
+  const response =    await fetch('https://chat-api-kbqm.onrender.com/register',{
         method:'POST',
         headers:{
           'Content-type':"application/json"
