@@ -6,7 +6,6 @@ from flask_cors import CORS
 import secrets
 import datetime
 from flask_socketio import SocketIO,emit
-
 uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 # Create a new client and connect to the server

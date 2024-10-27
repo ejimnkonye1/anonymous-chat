@@ -10,7 +10,7 @@ function App() {
 
 
   return (
-   <div className=' min-h-screen  '>
+   <div className=' min-h-screen text '>
     <Router>
       <Routes>
         <Route path='/' element={<Loginpage />} />
