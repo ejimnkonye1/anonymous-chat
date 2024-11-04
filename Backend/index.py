@@ -6,8 +6,15 @@ from flask_cors import CORS
 import secrets
 import datetime
 from flask_socketio import SocketIO,emit
-uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tlsInsecure=true"
 
+# uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tlsInsecure=true"
+
+
+# # Create a new client and connect to the server
+# client = MongoClient(uri, server_api=ServerApi('1'), connectTimeoutMS=30000, socketTimeoutMS=30000)
+# uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+uri = "mongodb+srv://ejimnkonye:billie433@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'), connectTimeoutMS=30000, socketTimeoutMS=30000)
@@ -25,7 +32,7 @@ try:
     client.admin.command('ping')
     print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
- print(f'Error connecting to MongoDb: {e}')
+    print(f'Error connecting to MongoDb: {e}')
 
 db = client['database1']
 user_collection = db['users']
