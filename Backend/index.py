@@ -6,12 +6,13 @@ from flask_cors import CORS
 import secrets
 import datetime
 from flask_socketio import SocketIO,emit
-# uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-# uri = "mongodb://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0-shard-00-00.rdsyp.mongodb.net:27017,cluster0-shard-00-01.rdsyp.mongodb.net:27017,cluster0-shard-00-02.rdsyp.mongodb.net:27017/database1?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true&w=majority"
-uri = "mongodb+srv://ejimnkonyeonyedika@gmail.com:Billie433@cluster0.rdsyp.mongodb.net/database1?retryWrites=true&w=majority&tlsInsecure=true"
+uri = "mongodb+srv://ejimnkonyeonyedika:nPs0iXR5gyPvxZG2@cluster0.rdsyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tlsInsecure=true"
+
 
 # Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
+client = MongoClient(uri, server_api=ServerApi('1'), connectTimeoutMS=30000, socketTimeoutMS=30000)
+
+# client = MongoClient(uri, server_api=ServerApi('1'))
 app = Flask(__name__)
 CORS(app)
 
