@@ -6,7 +6,7 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'https://onyedika.pythonanywhere.com', // Your Flask server
+                target: 'https://anonymous-chat-1.onrender.com', // Your Flask server
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, ''),
             },

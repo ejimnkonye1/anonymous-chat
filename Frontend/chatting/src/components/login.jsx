@@ -14,7 +14,7 @@ export const Loginpage = () => {
     e.preventDefault();
     setloading(true); 
     try{
-      const response = await fetch('https://chat-api-kbqm.onrender.com/login',{
+      const response = await fetch('https://anonymous-chat-1.onrender.com/login',{
         method:"POST",
         headers:{
           'Content-type':'application/json'
@@ -26,6 +26,8 @@ export const Loginpage = () => {
       })
       setloading(true)
       const data = await response.json()
+      console.log('Response:', response);
+      console.log('Data:', data);
       if(response.ok){
         setloading(true)
         console.log('user found logging in', data)
